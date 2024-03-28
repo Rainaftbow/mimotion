@@ -31,18 +31,6 @@ def get_int_value_default(_config: dict, _key, default):
     return int(_config.get(_key))
 
 
-# 获取当前时间对应的最大和最小步数
-def get_min_max_by_time(hour=None, minute=None):
-    if hour is None:
-        hour = time_bj.hour
-    if minute is None:
-        minute = time_bj.minute
-    time_rate = min((hour * 60 + minute) / (22 * 60), 1)
-    min_step = get_int_value_default(config, 'MIN_STEP', 18000)
-    max_step = get_int_value_default(config, 'MAX_STEP', 25000)
-    return int(time_rate * min_step), int(time_rate * max_step)
-
-
 # 虚拟ip地址
 def fake_ip():
     # 随便找的国内IP段：223.64.0.0 - 223.117.255.255
@@ -196,11 +184,10 @@ class MiMotionRunner:
         return app_token
 
     # 主函数
-    def login_and_post_step(self, min_step, max_step):
+    def login_and_post_step(self, step):
         if self.invalid:
             return "账号或密码配置有误", False
-        step = str(random.randint(min_step, max_step))
-        self.log_str += f"已设置为随机步数范围({min_step}~{max_step}) 随机值:{step}\n"
+        self.log_str += f"已设置为步数为11451\n"
         login_token, userid = self.login()
         if login_token == 0:
             return "登陆失败！", False
@@ -335,7 +322,7 @@ if __name__ == "__main__":
         if users is None or passwords is None:
             print("未正确配置账号密码，无法执行")
             exit(1)
-        min_step, max_step = get_min_max_by_time()
+        step = config.get('STEP')
         use_concurrent = config.get('USE_CONCURRENT')
         if use_concurrent is not None and use_concurrent == 'True':
             use_concurrent = True

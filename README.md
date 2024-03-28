@@ -57,8 +57,7 @@
   {
     "USER": "abcxxx@xx.com",
     "PWD": "password",
-    "MIN_STEP": "18000",
-    "MAX_STEP": "25000",
+    "STEP": "11451",
     "PUSH_PLUS_TOKEN": "",
     "PUSH_PLUS_HOUR": "",
     "PUSH_PLUS_MAX": "30",
@@ -71,8 +70,7 @@
   |-----------------|-------------------------------------------------------------------------------------------------|
   | USER            | 小米运动登录账号，仅支持小米运动账号对应的手机号或邮箱，不支持小米账号                                                             |
   | PWD             | 小米运动登录密码，仅支持小米运动账号对应的密码                                                                         |
-  | MIN_STEP        | 最小步数                                                                                            |
-  | MAX_STEP        | 最大步数，最大步数和最小步数随机范围随着时间线性增加，北京时间22点达到最大值                                                         |
+  | STEP            | 指定步数                                                                                           |                                                         |
   | PUSH_PLUS_TOKEN | 推送加的个人token,申请地址[pushplus](https://www.pushplus.plus/push1.html)，工作流执行完成后推送每个账号的执行状态信息，如没有则不要填写 |
   | PUSH_PLUS_HOUR  | 限制只在某个整点进行pushplus的推送，值为整数，比如设置21，则只在北京时间21点XX分执行时才进行pushplus的消息推送。如不设置或值非数字则每次执行后都会进行推送        |
   | PUSH_PLUS_MAX   | 设置pushplus最大推送账号详情数，默认为30，超过30个账号将只推送概要信息：多少个成功多少个失败。因为数量太多会导致内容过长无法推送。具体最大值请自行调试               |
@@ -90,8 +88,7 @@
 {
   "USER": "13800138000#13800138001",
   "PWD": "abc123qwe#abcqwe2",
-  "MIN_STEP": "18000",
-  "MAX_STEP": "25000",
+  "STEP": "11451",
   "PUSH_PLUS_TOKEN": "",
   "PUSH_PLUS_HOUR": ""
 }
@@ -127,15 +124,6 @@
 - 新fork的仓库默认未启用工作流，进入Actions后点击 `I understand my workflows, go ahead and enable them` 启用，然后左侧选择 `刷步数` 之后，再点击 `enable workflow` 启用工作流。请确保开启工作流，否则不会定时执行。
 - 点击右侧的`Run workflow`触发执行，触发后刷新即可查看执行记录。验证是否正确配置并执行刷步数。
 
-### 六、感谢列表
-
-本项目基于 `https://github.com/xunichanghuan/mimotion(已被ban)` 和 [https://github.com/huangshihai/mimotion](https://github.com/huangshihai/mimotion) 项目修改，特此感谢
-
-### 七、同步最新代码
-
-- 点击仓库界面上的 `Sync fork`，找不到的话直接Ctrl+F网页查找
-- 然后点击 `Update branch` 等待同步完成即可，如有其他提示请自行按提示操作
-- 同步更新后请自己再次仔细阅读README，配置项目修改等请自行对比，更新后因为配置不正确导致无法运行请不要找我
 
 ## 注意事项
 
@@ -158,27 +146,6 @@
 
 9. cron的执行根据github actions的资源进行排队，并不是百分百按指定的时间进行运行，请知悉。
 
-### 查看执行记录
-
-- 前往 [Actions](../../actions) 可以查看所有工作流的执行历史
-  - `刷步数 #41: Scheduled` 代表是定时任务触发，`刷步数 #33: Manually run by xxx` 代表手动触发
-- 点击其中一条记录，可以查看执行详情，这里以 `刷步数` 为例：
-  - 详情界面 `Jobs` 可以查看到一个 `build` ，点击它查看执行步骤
-  - 执行步骤中主要关注 `开始` ，点击 `开始` 展开详情
-  - 展开后便可以查看到执行日志，如果执行成功，则会显示每个账号当前随机的步数是多少
-  - 如果执行失败，则需要根据实际情况分析具体失败原因
-- 对于随机Cron的工作流 `Random Cron`，它会在 `刷步数` 执行成功后触发，执行后会更新cron表达式创建随机的分钟值，然后提交到git仓库。这一步失败的主要原因有：
-  - `PAT` Secret变量，也就是个人token设置的不正确
-  - `CRON_HOURS` Variable变量设置的不正确，需要逗号分隔的小时字符串例如：`1,3,4,5,6,7` 。不要添加奇奇怪怪的东西
-  - 其他请见执行日志
-- 随机Cron运行完毕后可以查看 `cron_change_time` 文件的内容，记录了触发方式、当前触发时间、cron表达式信息、下一次定时触发时间等信息，示例如下：
-  ```log
-  trigger by: workflow_run
-  current system time:
-  UTC: 23-06-03 12:56:53
-  北京时间: 23-06-03 20:56:53
-  current cron:
-  UTC时间: '48 1,4,7,10,12,14 * * *'
   北京时间: '48 9,12,15,18,20,22 * * *'
   next cron:
   UTC时间: '37 1,4,7,10,12,14 * * *'

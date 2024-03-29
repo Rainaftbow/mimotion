@@ -187,7 +187,7 @@ class MiMotionRunner:
     def login_and_post_step(self, step):
         if self.invalid:
             return "账号或密码配置有误", False
-        self.log_str += f"已设置为步数为11451\n"
+        self.log_str += f"已设置为步数为{step}\n"
         login_token, userid = self.login()
         if login_token == 0:
             return "登陆失败！", False
@@ -242,14 +242,14 @@ def push_to_push_plus(exec_results, summary):
         push_plus(f"{format_now()} 刷步数通知", html)
 
 
-def run_single_account(total, idx, user_mi, passwd_mi):
+def run_single_account(total, idx, user_mi, passwd_mi, step_mi):
     idx_info = ""
     if idx is not None:
         idx_info = f"[{idx+1}/{total}]"
     log_str = f"[{format_now()}]\n{idx_info}账号：{desensitize_user_name(user_mi)}"
     try:
         runner = MiMotionRunner(user_mi, passwd_mi)
-        exec_msg, success = runner.login_and_post_step(step)
+        exec_msg, success = runner.login_and_post_step(step_mi)
         log_str += runner.log_str
         log_str += f'{exec_msg}\n'
         exec_result = {"user": user_mi, "success": success,
@@ -266,16 +266,17 @@ def run_single_account(total, idx, user_mi, passwd_mi):
 def execute():
     user_list = users.split('#')
     passwd_list = passwords.split('#')
+    step_list = steps.split('#')
     exec_results = []
-    if len(user_list) == len(passwd_list):
+    if len(user_list) == len(passwd_list) == len(step_list):
         idx, total = 0, len(user_list)
         if use_concurrent:
             import concurrent.futures
             with concurrent.futures.ThreadPoolExecutor() as executor:
-                exec_results = executor.map(lambda x: run_single_account(total, x[0], *x[1]), enumerate(zip(user_list, passwd_list)))
+                exec_results = executor.map(lambda x: run_single_account(total, x[0], *x[1],), enumerate(zip(user_list, passwd_list, step_list)))
         else:
-            for user_mi, passwd_mi in zip(user_list, passwd_list):
-                exec_results.append(run_single_account(total, idx, user_mi, passwd_mi))
+            for user_mi, passwd_mi, step_mi in zip(user_list, passwd_list, step_list):
+                exec_results.append(run_single_account(total, idx, user_mi, passwd_mi, step_mi))
                 idx += 1
                 if idx < total:
                     # 每个账号之间间隔一定时间请求一次，避免接口请求过于频繁导致异常
@@ -291,7 +292,7 @@ def execute():
         print(summary)
         push_to_push_plus(push_results, summary)
     else:
-        print(f"账号数长度[{len(user_list)}]和密码数长度[{len(passwd_list)}]不匹配，跳过执行")
+        print(f"账号数长度[{len(user_list)}]、密码数长度[{len(passwd_list)}]与步数总数[{len(step_list)}]不匹配，跳过执行")
         exit(1)
 
 
@@ -319,10 +320,10 @@ if __name__ == "__main__":
         sleep_seconds = float(sleep_seconds)
         users = config.get('USER')
         passwords = config.get('PWD')
+        steps = config.get('STEP')
         if users is None or passwords is None:
             print("未正确配置账号密码，无法执行")
             exit(1)
-        step = config.get('STEP')
         use_concurrent = config.get('USE_CONCURRENT')
         if use_concurrent is not None and use_concurrent == 'True':
             use_concurrent = True

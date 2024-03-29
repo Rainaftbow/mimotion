@@ -249,7 +249,7 @@ def run_single_account(total, idx, user_mi, passwd_mi, step_mi):
     log_str = f"[{format_now()}]\n{idx_info}账号：{desensitize_user_name(user_mi)}"
     try:
         runner = MiMotionRunner(user_mi, passwd_mi)
-        exec_msg, success = runner.login_and_post_step(step_mi)
+        exec_msg, success = runner.login_and_post_step(int(step_mi))
         log_str += runner.log_str
         log_str += f'{exec_msg}\n'
         exec_result = {"user": user_mi, "success": success,

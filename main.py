@@ -184,9 +184,11 @@ class MiMotionRunner:
         return app_token
 
     # 主函数
-    def login_and_post_step(self, step=10000):
+    def login_and_post_step(self, step):
         if self.invalid:
             return "账号或密码配置有误", False
+        if step:
+            step = 10000
         self.log_str += f"已设置为步数为{step}\n"
         login_token, userid = self.login()
         if login_token == 0:
@@ -280,7 +282,7 @@ def execute():
                 idx += 1
                 if idx < total:
                     # 每个账号之间间隔一定时间请求一次，避免接口请求过于频繁导致异常
-                    time.sleep(sleep_seconds)
+                    time.sleep(sleep_seconds
 
         success_count = 0
         push_results = []

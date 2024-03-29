@@ -1,10 +1,5 @@
 # mimotion
 
-![ 刷步数](https://github.com/TonyJiangWJ/mimotion/actions/workflows/run.yml/badge.svg)
-[![GitHub forks](https://img.shields.io/github/forks/TonyJiangWJ/mimotion?style=flat-square)](https://github.com/TonyJiangWJ/mimotion/forks)
-[![GitHub stars](https://img.shields.io/github/stars/TonyJiangWJ/mimotion?style=flat-square)](https://github.com/TonyJiangWJ/mimotion/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/TonyJiangWJ/mimotion?style=flat-square)](https://github.com/TonyJiangWJ/mimotion/issues)
-
 ## 小米运动自动刷指定步数（支持邮箱登录）
 
 - 小米运动自动刷步数，小米运动APP现已改名 `Zepp Life`，为方便说明，后面还是称其为小米运动。但下载注册时请搜索 `Zepp Life`。
@@ -70,7 +65,7 @@
   |-----------------|-------------------------------------------------------------------------------------------------|
   | USER            | 小米运动登录账号，仅支持小米运动账号对应的手机号或邮箱，不支持小米账号                                                             |
   | PWD             | 小米运动登录密码，仅支持小米运动账号对应的密码                                                                         |
-  | STEP            | 指定步数，建议范围：0~98800                                                                                       |                                                         |
+  | STEP            | 指定步数，默认值10000，建议范围：0~98800                                                                                       |                                                         |
   | PUSH_PLUS_TOKEN | 推送加的个人token,申请地址[pushplus](https://www.pushplus.plus/push1.html)，工作流执行完成后推送每个账号的执行状态信息，如没有则不要填写 |
   | PUSH_PLUS_HOUR  | 限制只在某个整点进行pushplus的推送，值为整数，比如设置21，则只在北京时间21点XX分执行时才进行pushplus的消息推送。如不设置或值非数字则每次执行后都会进行推送        |
   | PUSH_PLUS_MAX   | 设置pushplus最大推送账号详情数，默认为30，超过30个账号将只推送概要信息：多少个成功多少个失败。因为数量太多会导致内容过长无法推送。具体最大值请自行调试               |

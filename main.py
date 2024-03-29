@@ -187,6 +187,8 @@ class MiMotionRunner:
     def login_and_post_step(self, step):
         if self.invalid:
             return "账号或密码配置有误", False
+        if not step or step == None:
+            step = '10000'
         self.log_str += f"已设置为步数为{step}\n"
         login_token, userid = self.login()
         if login_token == 0:
